@@ -1,0 +1,16 @@
+{
+  "username": "john_doe123",
+  "email": "john.doe@example.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "phoneNumber": "+375291234567",
+  "country": "Belarus",
+  "region": "Minsk Region",
+  "city": "Minsk",
+  "street": "Lenina Street",
+  "houseNumber": "10A-1",
+  "apartmentNumber": "25B",
+  "zipCode": "220030",
+  "avatarUrl": "https://example.com/avatar.jpg",
+  "description": "Experienced developer with a passion for clean code and system architecture."
+}

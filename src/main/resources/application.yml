@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: web-application-for-selling-cable-and-wire-products
+
+  datasource:
+    host: ${DB_HOST:localhost}
+    port: ${DB_PORT:5432}
+    db: ${DB_NAME:cable_and_wire_products_shop_db}
+    url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.db}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:98479847}
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/main-changelog.xml
+    default-schema: public
+
+server:
+  port: 8080

@@ -1,0 +1,32 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="version1-6" author="postgres">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="product">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="main_image_url" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_bel_rub"  type="decimal(19,2)" defaultValueNumeric="0.0">
+                <constraints nullable="false" checkConstraint="redemption_sum >= 0.0"/>
+            </column>
+            <column name="discount_percentage" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="true" checkConstraint="discount_percentage >= 0 AND discount_percentage <= 100"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
