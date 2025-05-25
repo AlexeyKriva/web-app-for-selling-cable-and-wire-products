@@ -37,7 +37,6 @@ public class UserEventListener {
         User existUser = event.getExistUser();
         User updateUser = event.getUpdateUser();
 
-        //addressService.applyAddressUpdates(existUser.getAddress(), updateUser.getAddress());
         userService.applyUserUpdates(existUser, updateUser);
     }
 }

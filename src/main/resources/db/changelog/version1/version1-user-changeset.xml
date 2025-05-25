@@ -50,7 +50,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="username" type="varchar(55)">
-                <constraints nullable="false" checkConstraint="LENGTH(username) >= 6" unique="true"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="email" type="varchar(255)">
                 <constraints nullable="false" unique="true"/>
@@ -77,6 +77,10 @@
                 <constraints nullable="false" />
             </column>
         </createTable>
+
+        <sql>
+            ALTER TABLE shop_user ADD CONSTRAINT chk_username_more_or_equal_than_six CHECK (LENGTH(username) >= 6);
+        </sql>
     </changeSet>
 
     <changeSet id="version1-3" author="postgres">
@@ -123,9 +127,13 @@
                 <constraints nullable="true"/>
             </column>
             <column name="redemption_sum" type="decimal(19,2)" defaultValueNumeric="0.0">
-                <constraints nullable="false" checkConstraint="redemption_sum >= 0.0"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <sql>
+            ALTER TABLE user_details ADD CONSTRAINT chk_redemption_sum_non_negative CHECK (redemption_sum >= 0);
+        </sql>
     </changeSet>
 
     <changeSet id="version1-5" author="postgres">

@@ -1,7 +1,9 @@
-<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+       http://www.liquibase.org/xml/ns/dbchangelog
+       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
 
     <changeSet id="version1-6" author="postgres">
         <preConditions onFail="MARK_RAN">
@@ -21,12 +23,153 @@
                 <constraints nullable="false"/>
             </column>
             <column name="price_bel_rub"  type="decimal(19,2)" defaultValueNumeric="0.0">
-                <constraints nullable="false" checkConstraint="redemption_sum >= 0.0"/>
+                <constraints nullable="false"/>
             </column>
             <column name="discount_percentage" type="INTEGER" defaultValueNumeric="0">
-                <constraints nullable="true" checkConstraint="discount_percentage >= 0 AND discount_percentage <= 100"/>
+                <constraints nullable="true" checkConstraint="discount_percentage >= 0"/>
+            </column>
+            <column name="is_deleted"  type="boolean" defaultValueBoolean="false">
+                <constraints nullable="true"/>
+            </column>
+            <column name="added_at" type="timestamp" defaultValueComputed="now()">
+                <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <sql>
+            ALTER TABLE product ADD CONSTRAINT chk_price_bel_rub_non_negative CHECK (price_bel_rub >= 0);
+        </sql>
+        <sql>
+            ALTER TABLE product ADD CONSTRAINT chk_discount_percentage_non_negative CHECK (discount_percentage >= 0);
+        </sql>
+        <sql>
+            ALTER TABLE product ADD CONSTRAINT chk_discount_percentage_less_than_or_equal_100 CHECK (discount_percentage &lt;= 100);
+        </sql>
+    </changeSet>
+
+    <changeSet id="version1-7" author="postgres">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="category"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="category">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="version1-8" author="postgres">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_details"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="product_details">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_product_details_product" references="product(id)"/>
+            </column>
+            <column name="category_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_product_details_category" references="category(id)"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="true"/>
+            </column>
+            <column name="anufacturer" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="version1-9" author="postgres">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="material"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="material">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_details_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_product_details_material" references="product_details(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="version1-10" author="postgres">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_image"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="product_image">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="version1-11" author="postgres">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_stats"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="product_stats">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_product_stats_product" references="product(id)"/>
+            </column>
+            <column name="stock_quantity" type="bigint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sold_count" type="bigint"  defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cart_count" type="bigint"  defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="view_count" type="bigint"  defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>
+            ALTER TABLE product_stats ADD CONSTRAINT chk_stock_quantity_non_negative CHECK (stock_quantity >= 0);
+        </sql>
+        <sql>
+            ALTER TABLE product_stats ADD CONSTRAINT chk_sold_count_non_negative CHECK (sold_count >= 0);
+        </sql>
+        <sql>
+            ALTER TABLE product_stats ADD CONSTRAINT chk_cart_count_non_negative CHECK (cart_count >= 0);
+        </sql>
+        <sql>
+            ALTER TABLE product_stats ADD CONSTRAINT chk_view_count_non_negative CHECK (view_count >= 0);
+        </sql>
     </changeSet>
 
 </databaseChangeLog>
