@@ -22,7 +22,7 @@
             <column name="main_image_url" type="varchar(1000)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price_bel_rub"  type="decimal(19,2)" defaultValueNumeric="0.0">
+            <column name="price_bel_rub" type="decimal(19,2)" defaultValueNumeric="0.0">
                 <constraints nullable="false"/>
             </column>
             <column name="discount_percentage" type="INTEGER" defaultValueNumeric="0">

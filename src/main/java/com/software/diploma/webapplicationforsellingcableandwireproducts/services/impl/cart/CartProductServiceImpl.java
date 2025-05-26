@@ -87,7 +87,7 @@ public class CartProductServiceImpl implements CartProductService {
 
             publisher.publishEvent(new CartUpdateEvent(this, cartProductFromDb, deltaTotalProductAmount < 0 ?
                             Math.max(deltaTotalProductAmount,
-                                    DEFAULT_NEGATIVE * cartProductFromDb.getTotalProductAmount()) :
+                                    NEGATIVE_ONE * cartProductFromDb.getTotalProductAmount()) :
                             deltaTotalProductAmount, CartEventStatus.UPDATE_PRODUCTS));
 
             if (cartProductFromDb.getTotalProductAmount() + deltaTotalProductAmount <= MIN_TOTAL_PRODUCT_AMOUNT_IN_CART) {
@@ -104,6 +104,11 @@ public class CartProductServiceImpl implements CartProductService {
 
         throw new InsufficientStockException(INSUFFICIENT_STOCK_MESSAGE, cartProductFromDb.getTotalProductAmount(),
                 stockQuantity);
+    }
+
+    @Transactional
+    public void deleteAllByCartId(Long cartId) {
+        repository.deleteAllByCartId(cartId);
     }
 
     private Integer totalProductAmount(Integer currentTotalProductAmount, Integer deltaTotalProductAmount) {

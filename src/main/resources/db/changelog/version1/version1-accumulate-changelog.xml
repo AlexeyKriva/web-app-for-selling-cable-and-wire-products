@@ -6,5 +6,6 @@
     <include file="version1-user-changeset.xml" relativeToChangelogFile="true"/>
     <include file="version1-product-changeset.xml" relativeToChangelogFile="true"/>
     <include file="version1-cart-changeset.xml" relativeToChangelogFile="true"/>
+    <include file="version1-order-changeset.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

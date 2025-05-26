@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 98479847
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      retries: 5
+      start_period: 15s
+      timeout: 10s
+
+  web-app-for-selling-cable-and-wire-products:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web-app-for-selling-cable-and-wire-products
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: host.docker.internal
+      DB_PORT: 5432

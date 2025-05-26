@@ -12,4 +12,5 @@ public interface CartProductService {
     CartProduct save(CartProductSaveDto сartProductSaveDto);
     void deleteById(Long id);
     CartProduct updateTotalProductAmountById(Long id, CartTotalProductAmountDto cartTotalProductAmountDto);
+    void deleteAllByCartId(Long cartId);
 }

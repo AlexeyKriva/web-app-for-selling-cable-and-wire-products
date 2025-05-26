@@ -1,0 +1,71 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+       http://www.liquibase.org/xml/ns/dbchangelog
+       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="version1-14" author="postgres">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="shop_order"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="shop_order">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_cart_shop_user" references="shop_user(id)"/>
+            </column>
+            <column name="total_sum_in_bel_rub" type="decimal(19,2)" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delivery_address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_date" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <sql>
+            ALTER TABLE shop_order ADD CONSTRAINT chk_total_sum_in_bel_rub_non_negative CHECK (total_sum_in_bel_rub >= 0);
+        </sql>
+    </changeSet>
+
+    <changeSet id="version1-15" author="postgres">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="order_product"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="order_product">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="order_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_order_product_shop_order" references="shop_order(id)"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_order_product_product" references="product(id)"/>
+            </column>
+            <column name="total_product_amount" type="integer" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <sql>
+            ALTER TABLE order_product ADD CONSTRAINT chk_total_product_amount_non_negative CHECK (total_product_amount >= 0);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
