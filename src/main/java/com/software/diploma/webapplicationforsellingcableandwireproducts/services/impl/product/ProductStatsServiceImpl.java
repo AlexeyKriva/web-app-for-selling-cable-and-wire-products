@@ -7,6 +7,7 @@ import com.software.diploma.webapplicationforsellingcableandwireproducts.reposit
 import com.software.diploma.webapplicationforsellingcableandwireproducts.services.product.ProductStatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.software.diploma.webapplicationforsellingcableandwireproducts.util.product.ProductExceptionMessage.PRODUCT_NOT_FOUND_MESSAGE;
@@ -29,7 +30,7 @@ public class ProductStatsServiceImpl implements ProductStatsService {
         return repository.save(productStats);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ProductStats updateByProductId(Long productId, ProductStatsDeltaDto productStatsDeltaDto) {
         ProductStats existProductStats = repository.findByProductIdAndProductNotDeleted(productId)
                 .orElseThrow(() -> {
@@ -56,6 +57,8 @@ public class ProductStatsServiceImpl implements ProductStatsService {
                     productStatsDeltaDto.deltaViewCount());
         }
 
+        System.out.println("\n\n\n" + existProductStats + "\n\n\n\n");
+
         return repository.save(existProductStats);
     }
 
@@ -70,5 +73,15 @@ public class ProductStatsServiceImpl implements ProductStatsService {
                 productStats.getStockQuantity());
 
         return repository.save(productStatsFromDb);
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getStockQuantityByProductId(Long productId) {
+        ProductStats productStatsFromDb = repository.findByProductIdAndProductNotDeleted(productId)
+                .orElseThrow(() -> {
+                    throw new ProductNotFoundException(PRODUCT_NOT_FOUND_MESSAGE);
+                });
+
+        return productStatsFromDb.getStockQuantity();
     }
 }

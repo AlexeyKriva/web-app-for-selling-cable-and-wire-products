@@ -1,11 +1,13 @@
 package com.software.diploma.webapplicationforsellingcableandwireproducts.exception.product;
 
+import com.software.diploma.webapplicationforsellingcableandwireproducts.controller.cart.CartProductController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(basePackages = "com.software.diploma.webapplicationforsellingcableandwireproducts.controller.product")
+@RestControllerAdvice(basePackages = "com.software.diploma.webapplicationforsellingcableandwireproducts.controller.product",
+basePackageClasses = CartProductController.class)
 public class ProductExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ProductNotFoundException> productNotFoundExceptionHandler(

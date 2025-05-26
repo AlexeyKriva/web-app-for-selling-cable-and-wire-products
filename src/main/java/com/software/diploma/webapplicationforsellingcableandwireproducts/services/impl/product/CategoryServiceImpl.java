@@ -17,7 +17,6 @@ import static com.software.diploma.webapplicationforsellingcableandwireproducts.
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository repository;
 
-
     @Transactional(readOnly = true)
     public List<Category> getAll() {
         return repository.findAll();

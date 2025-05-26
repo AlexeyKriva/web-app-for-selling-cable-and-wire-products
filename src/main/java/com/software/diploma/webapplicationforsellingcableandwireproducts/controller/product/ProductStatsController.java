@@ -21,7 +21,7 @@ public class ProductStatsController {
         return ResponseEntity.ok(service.getByProductId(productId));
     }
 
-    @PostMapping("/{productId}")
+    @PostMapping("/{productId}/stock")
     public ResponseEntity<ProductStats> updateStockQuantityByProductId(
             @PathVariable("productId") Long productId,
             @Valid @RequestBody ProductStatsStockQuantityDto productStatsStockQuantityDto

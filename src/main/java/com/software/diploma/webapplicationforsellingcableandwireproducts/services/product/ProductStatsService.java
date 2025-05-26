@@ -8,4 +8,5 @@ public interface ProductStatsService {
     ProductStats save(ProductStats productStats);
     ProductStats updateByProductId(Long productId, ProductStatsDeltaDto productStatsDeltaDto);
     ProductStats updateStockQuantityByProductId(Long productId, ProductStats productStats);
+    Integer getStockQuantityByProductId(Long productId);
 }

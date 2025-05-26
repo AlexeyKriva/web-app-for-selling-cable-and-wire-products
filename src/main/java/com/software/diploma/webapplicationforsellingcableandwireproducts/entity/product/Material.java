@@ -17,7 +17,7 @@ public class Material extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne//(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "product_details_id")
     @JsonBackReference
     private ProductDetails productDetails;
